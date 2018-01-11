@@ -48,6 +48,21 @@
 		return;
 	}
 	
+	int reuse = 1;
+	if( setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0 )
+	{
+		perror("SO_REUSEADDR");
+		close(s);
+		return;
+	}
+	
+	if( setsockopt(s, SOL_SOCKET, SO_REUSEPORT, &reuse, sizeof(reuse)) < 0 )
+	{
+		perror("SO_REUSEPORT");
+		close(s);
+		return;
+	}
+
 	si_me.sin_family = AF_INET;
 	si_me.sin_port = htons(PORT);
 	si_me.sin_addr.s_addr = htonl(INADDR_ANY);
