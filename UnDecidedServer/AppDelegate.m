@@ -101,7 +101,7 @@
 		fflush(stdout);
 		
 		//try to receive some data, this is a blocking call
-		struct sockaddr_in si_other;
+		struct sockaddr_in si_other = {};
 		ssize_t recv_len;
 		socklen_t slen = sizeof(si_other);
 		char buf[BUFLEN +1] = {};	// +1 to ensure it's always terminated.
@@ -110,6 +110,7 @@
 			perror("recvfrom()");
 			continue;
 		}
+		NSLog(@"Received %zu bytes", recv_len);
 		
 		UnDecidedServerConnection* foundConnection = nil;
 		

@@ -91,7 +91,7 @@
 {
 	NSLog(@"Received: %@", inString);
 	
-	if( [inString hasPrefix: @"MEP:"] )
+	if( [inString hasPrefix: @"MEP:"] )	// My position
 	{
 		NSArray *parts = [inString componentsSeparatedByString: @":"];
 		if( parts.count < 2 ) return;
@@ -100,7 +100,7 @@
 		myPosition = NSPointFromString(positionString);
 		NSLog(@"Server confirmed our position as %f,%f", myPosition.x, myPosition.y);
 	}
-	else if( [inString hasPrefix: @"POS:"] )
+	else if( [inString hasPrefix: @"POS:"] ) // Some other player's position
 	{
 		NSArray *parts = [inString componentsSeparatedByString: @":"];
 		if( parts.count < 4 ) return;
@@ -133,6 +133,8 @@
 
 -(void) sendOneMessage: (NSString*)msg
 {
+	NSLog(@"Send: %@", msg);
+	
 	const char* message = msg.UTF8String;
 	
 	//send the message
@@ -140,30 +142,28 @@
 	{
 		perror("sendto()");
 	}
-	else
-	{
-		NSLog(@"Sent: %s", message);
-	}
 }
 
 
 -(void) udpClientThread
 {
-	socklen_t slen=sizeof(si_other);
-
 	while(true)
 	{
 		//receive a reply and print it
 		char buf[BUFLEN] = {};
 
+		struct sockaddr_in si_sender = {};
+		socklen_t slen = sizeof(si_sender);
+		
 		//try to receive some data, this is a blocking call
 		NSLog(@"waiting for reply.");
-		if( recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen) == -1 )
+		size_t receivedAmount = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_sender, &slen);
+		if(receivedAmount  == -1 )
 		{
 			perror("recvfrom()");
 			continue;
 		}
-		NSLog(@"\thandling reply.");
+		NSLog(@"\thandling reply of length %zu.", receivedAmount);
 
 		NSString * message = [NSString stringWithUTF8String: buf];
 		[self performSelectorOnMainThread: @selector(handleOneMessage:) withObject: message waitUntilDone: NO];

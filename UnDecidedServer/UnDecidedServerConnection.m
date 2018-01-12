@@ -77,12 +77,15 @@
 {
 	NSLog(@"Received: %@", inMessage);
 	
-	if( [inMessage hasPrefix: @"HEY"] )
+	if( [inMessage hasPrefix: @"HEY"] )	// A client just "connected".
 	{
+		// Tell the client about its current position:
 		[self sendMessageString: [NSString stringWithFormat: @"MEP:{%f,%f}", self.playerPosition.x, self.playerPosition.y]];
+		
+		// Tell the client about every other client's position:
 		[self.owner sendLocationMessagesTo: self];
 	}
-	else if( [inMessage hasPrefix: @"MOV:"] )
+	else if( [inMessage hasPrefix: @"MOV:"] ) // A client would like to move elsewhere.
 	{
 		NSPoint desiredPosition = NSPointFromString([inMessage substringFromIndex: 5]);
 		CGFloat xDist = fabs(desiredPosition.x -self.playerPosition.x);
@@ -96,7 +99,7 @@
 			[self.owner sendOneMessageToAll: [NSString stringWithFormat: @"POS:%s:%d:{%f,%f}", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.playerPosition.x, self.playerPosition.y]];
 		}
 	}
-	else if( [inMessage hasPrefix: @"BYE"] )
+	else if( [inMessage hasPrefix: @"BYE"] ) // A client is quitting, clean up the "connection" object.
 	{
 		[self.owner performSelectorOnMainThread: @selector(closeConnection:) withObject: self waitUntilDone: NO];
 	}

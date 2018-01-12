@@ -21,5 +21,7 @@
 -(void) sendOneMessageToAll: (NSString*)msg;
 -(void) sendLocationMessagesTo: (UnDecidedServerConnection*)inReceiver;
 
+-(void) closeConnection: (UnDecidedServerConnection*)inReceiver;
+
 @end
 
