@@ -119,7 +119,7 @@
 			for( UnDecidedServerConnection* currConnection in self.connections )
 			{
 				struct sockaddr_in currAddress = currConnection.socketAddress;
-				if( currAddress.sin_len == si_other.sin_len && currAddress.sin_family == si_other.sin_family && currAddress.sin_addr.s_addr == si_other.sin_addr.s_addr )
+				if( currAddress.sin_len == si_other.sin_len && currAddress.sin_family == si_other.sin_family && currAddress.sin_addr.s_addr == si_other.sin_addr.s_addr && currAddress.sin_port == si_other.sin_port )
 				{
 					foundConnection = currConnection;
 					break;
