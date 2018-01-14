@@ -30,6 +30,8 @@
 
 @property (weak) IBOutlet NSWindow *window;
 @property (weak) IBOutlet UnDecidedMapView *mapView;
+@property NSMutableDictionary<NSString *,NSString *> *passwordsForUsernames;
+@property (strong) NSMutableArray<UnDecidedServerConnection *> *connections;
 
 @end
 
@@ -38,6 +40,13 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	self.connections = [NSMutableArray array];
+	NSString * passwordsFile = [@"~/Library/Application Support/Passwords.plist" stringByExpandingTildeInPath];
+	self.passwordsForUsernames = [NSMutableDictionary dictionaryWithContentsOfFile: passwordsFile];
+	if( self.passwordsForUsernames == nil )
+	{
+		self.passwordsForUsernames = [NSMutableDictionary dictionaryWithObjectsAndKeys: @"Insecure", @"admin", nil];
+		[self.passwordsForUsernames writeToFile: passwordsFile atomically: YES];
+	}
 	
 	struct sockaddr_in si_me = {};
 	
@@ -112,35 +121,95 @@
 		}
 		NSLog(@"Received %zu bytes", recv_len);
 		
+		NSString * loggedInUserName = nil;
 		UnDecidedServerConnection* foundConnection = nil;
-		
-		@synchronized(self.connections)
+		NSString * message = [NSString stringWithUTF8String: buf];
+		NSArray<NSString *> *messageParts = [message componentsSeparatedByString: @":"];
+		if( [messageParts.firstObject isEqualToString: @"HEY"] )
 		{
-			for( UnDecidedServerConnection* currConnection in self.connections )
+			if( messageParts.count < 3 ) continue;
+			NSString * requestedUserName = messageParts[1].stringByRemovingPercentEncoding;
+			NSString * password = messageParts[2].stringByRemovingPercentEncoding;
+			
+			NSString * actualPassword = self.passwordsForUsernames[requestedUserName];
+			if( [actualPassword isEqualToString: password] )
+				loggedInUserName = requestedUserName;
+
+			@synchronized(self.connections)
 			{
-				struct sockaddr_in currAddress = currConnection.socketAddress;
-				if( currAddress.sin_len == si_other.sin_len && currAddress.sin_family == si_other.sin_family && currAddress.sin_addr.s_addr == si_other.sin_addr.s_addr && currAddress.sin_port == si_other.sin_port )
+				for( UnDecidedServerConnection* currConnection in self.connections )
 				{
-					foundConnection = currConnection;
-					break;
+					if( [loggedInUserName isEqualToString: currConnection.userName]  )
+					{
+						if( si_other.sin_family != currConnection.socketAddress.sin_family
+						   || si_other.sin_addr.s_addr != currConnection.socketAddress.sin_addr.s_addr
+						   || si_other.sin_port != currConnection.socketAddress.sin_port )
+						{
+							[self closeConnection: currConnection];	// Log out old session, below will make a new one.
+							break;
+						}
+						else
+							foundConnection = currConnection;
+						break;
+					}
+				}
+			}
+			
+			if( !foundConnection )
+			{
+				foundConnection = [[UnDecidedServerConnection alloc] initWithAddress: si_other owner: self];
+				foundConnection.userName = loggedInUserName;
+				@synchronized(self.connections)
+				{
+					[self.connections addObject: foundConnection];
+				}
+			}
+			else
+			{
+				NSLog(@"Re-using connection %@", foundConnection);
+			}
+		}
+		else
+		{
+			if( messageParts.count < 2 ) continue;
+			
+			NSString * sessionID = messageParts[1];
+			
+			@synchronized(self.connections)
+			{
+				for( UnDecidedServerConnection* currConnection in self.connections )
+				{
+					if( [sessionID isEqualToString: currConnection.sessionID]  )
+					{
+						if( si_other.sin_family != currConnection.socketAddress.sin_family
+						   || si_other.sin_addr.s_addr != currConnection.socketAddress.sin_addr.s_addr
+						   || si_other.sin_port != currConnection.socketAddress.sin_port )
+						{
+							[self closeConnection: currConnection];
+							break;
+						}
+						else
+							foundConnection = currConnection;
+						break;
+					}
 				}
 			}
 		}
 		
 		if( !foundConnection )
 		{
-			foundConnection = [[UnDecidedServerConnection alloc] initWithAddress: si_other owner: self];
-			@synchronized(self.connections)
+			NSLog(@"No valid connection found for session '%@'.", (messageParts.count > 1) ? messageParts[1] : @"");
+			const char* buf = [@"ERR:NotLoggedIn" UTF8String];
+			
+			if (sendto(s, buf, strlen(buf), 0, (struct sockaddr*) &si_other, sizeof(si_other)) == -1)
 			{
-				[self.connections addObject: foundConnection];
+				perror("sendto()");
 			}
-		}
-		else
-		{
-			NSLog(@"Re-using connection %@", foundConnection);
+			continue;
 		}
 		
-		NSString * message = [NSString stringWithUTF8String: buf];
+		NSLog(@"Using connection %@", foundConnection);
+		
 		[foundConnection performSelectorOnMainThread: @selector(handleOneMessageString:) withObject: message waitUntilDone: NO];
 	}
 }
@@ -172,6 +241,7 @@
 -(void) closeConnection: (UnDecidedServerConnection*)inReceiver
 {
 	dispatch_async( dispatch_get_main_queue(), ^{
+		[inReceiver performSelectorOnMainThread: @selector(sendMessageString:) withObject: @"BYE" waitUntilDone: NO];
 		@synchronized(self.connections)
 		{
 			[self.connections removeObject: inReceiver];

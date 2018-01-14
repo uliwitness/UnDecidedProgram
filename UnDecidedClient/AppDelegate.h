@@ -14,7 +14,7 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
--(IBAction) sendMessage: (id)sender;
+-(IBAction) logIn: (id)sender;
 
 @end
 

@@ -10,5 +10,6 @@
 
 
 @interface UnDecidedPlayer : NSObject
-@property NSPoint playerPosition;
+@property (copy) NSString *userName;
+@property (assign) NSPoint playerPosition;
 @end

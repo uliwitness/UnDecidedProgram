@@ -11,11 +11,14 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
+                <outlet property="logInButton" destination="fr3-qO-DI7" id="HvI-ny-0ZX"/>
+                <outlet property="logOutButton" destination="PVk-hF-a47" id="sby-FT-23s"/>
                 <outlet property="mapView" destination="EqX-nE-mmX" id="UFx-Tf-obw"/>
-                <outlet property="messageField" destination="Tz0-1Z-szd" id="Frj-Vw-lbH"/>
+                <outlet property="passwordField" destination="aXo-85-jWr" id="9yp-Nb-3uV"/>
+                <outlet property="userNameField" destination="Tz0-1Z-szd" id="Og4-6s-kP8"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -691,19 +694,25 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Tz0-1Z-szd">
-                        <rect key="frame" x="98" y="318" width="200" height="22"/>
+                        <rect key="frame" x="20" y="318" width="100" height="22"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="200" id="m6s-dQ-cGB"/>
+                            <constraint firstAttribute="width" constant="100" id="m6s-dQ-cGB"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="Testing One Two" drawsBackground="YES" id="RKb-Cw-3kT">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="admin" placeholderString="username" drawsBackground="YES" usesSingleLineMode="YES" id="RKb-Cw-3kT">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="EqX-nE-mmX" customClass="UnDecidedMapView">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="301"/>
+                        <connections>
+                            <outlet property="delegate" destination="Voe-Tx-rLC" id="1eD-wj-mOm"/>
+                        </connections>
+                    </customView>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fr3-qO-DI7">
-                        <rect key="frame" x="300" y="311" width="71" height="32"/>
-                        <buttonCell key="cell" type="push" title="Send" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rd2-Er-CoE">
+                        <rect key="frame" x="230" y="311" width="77" height="32"/>
+                        <buttonCell key="cell" type="push" title="Log in" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rd2-Er-CoE">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -711,26 +720,50 @@ DQ
 </string>
                         </buttonCell>
                         <connections>
-                            <action selector="sendMessage:" target="Voe-Tx-rLC" id="Glx-QE-me7"/>
+                            <action selector="logIn:" target="Voe-Tx-rLC" id="opw-Yh-U8A"/>
                         </connections>
                     </button>
-                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="EqX-nE-mmX" customClass="UnDecidedMapView">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="301"/>
+                    <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aXo-85-jWr">
+                        <rect key="frame" x="128" y="318" width="100" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="8Hv-iS-tSu"/>
+                        </constraints>
+                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="password" drawsBackground="YES" usesSingleLineMode="YES" id="eF4-pY-gO1">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <allowedInputSourceLocales>
+                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                            </allowedInputSourceLocales>
+                        </secureTextFieldCell>
+                    </secureTextField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PVk-hF-a47">
+                        <rect key="frame" x="307" y="311" width="86" height="32"/>
+                        <buttonCell key="cell" type="push" title="Log out" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="U3w-Gg-hDU">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
                         <connections>
-                            <outlet property="delegate" destination="Voe-Tx-rLC" id="1eD-wj-mOm"/>
+                            <action selector="logOut:" target="Voe-Tx-rLC" id="Wek-aR-O83"/>
                         </connections>
-                    </customView>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="EqX-nE-mmX" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="AKf-Rv-TRe"/>
-                    <constraint firstItem="Tz0-1Z-szd" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="98" id="GH7-7O-7qv"/>
-                    <constraint firstItem="fr3-qO-DI7" firstAttribute="leading" secondItem="Tz0-1Z-szd" secondAttribute="trailing" constant="8" symbolic="YES" id="GQH-o2-6NQ"/>
+                    <constraint firstItem="Tz0-1Z-szd" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="GH7-7O-7qv"/>
+                    <constraint firstItem="fr3-qO-DI7" firstAttribute="leading" secondItem="aXo-85-jWr" secondAttribute="trailing" constant="8" symbolic="YES" id="HJI-iF-VUv"/>
+                    <constraint firstItem="aXo-85-jWr" firstAttribute="leading" secondItem="Tz0-1Z-szd" secondAttribute="trailing" constant="8" symbolic="YES" id="Pjn-VJ-LAQ"/>
                     <constraint firstItem="EqX-nE-mmX" firstAttribute="top" secondItem="Tz0-1Z-szd" secondAttribute="bottom" constant="17" id="U7Z-pJ-o23"/>
+                    <constraint firstItem="aXo-85-jWr" firstAttribute="baseline" secondItem="Tz0-1Z-szd" secondAttribute="baseline" id="VMe-MB-le1"/>
                     <constraint firstAttribute="trailing" secondItem="EqX-nE-mmX" secondAttribute="trailing" id="W4D-sQ-yv7"/>
+                    <constraint firstItem="PVk-hF-a47" firstAttribute="baseline" secondItem="fr3-qO-DI7" secondAttribute="baseline" id="XLG-wO-Yjb"/>
+                    <constraint firstItem="PVk-hF-a47" firstAttribute="leading" secondItem="fr3-qO-DI7" secondAttribute="trailing" constant="12" id="ZgL-Qv-gzC"/>
                     <constraint firstItem="Tz0-1Z-szd" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="lfE-WL-Wqk"/>
                     <constraint firstItem="fr3-qO-DI7" firstAttribute="baseline" secondItem="Tz0-1Z-szd" secondAttribute="baseline" id="mmw-1p-RIs"/>
                     <constraint firstAttribute="bottom" secondItem="EqX-nE-mmX" secondAttribute="bottom" id="wbm-b9-xUG"/>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="fr3-qO-DI7" secondAttribute="trailing" constant="20" id="yOe-Np-mKs"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="138" y="0.0"/>

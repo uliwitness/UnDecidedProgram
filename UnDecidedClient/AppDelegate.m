@@ -28,12 +28,17 @@
 	struct sockaddr_in si_other;
 	int s;
 	NSPoint myPosition;
+	BOOL keepReceiving;
 }
 
 @property (weak) IBOutlet NSWindow *window;
-@property (weak) IBOutlet NSTextField *messageField;
+@property (weak) IBOutlet NSTextField *userNameField;
+@property (weak) IBOutlet NSTextField *passwordField;
+@property (weak) IBOutlet NSButton *logInButton;
+@property (weak) IBOutlet NSButton *logOutButton;
 @property (weak) IBOutlet UnDecidedMapView* mapView;
 @property (strong) NSMutableDictionary *playerPositions;
+@property (copy) NSString *sessionID;
 
 @end
 
@@ -42,7 +47,99 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	self.playerPositions = [NSMutableDictionary dictionary];
+	[self updateLogInUI];
+}
+
+
+-(void) handleOneMessage: (NSString*)inString
+{
+	NSLog(@"Received: %@", inString);
 	
+	NSArray *parts = [inString componentsSeparatedByString: @":"];
+	if( [inString hasPrefix: @"HEY:"] )	// Answer to our "HEY"! We're logged in!
+	{
+		if( parts.count < 2 ) return;
+		self.sessionID = parts[1];
+		self.playerPositions = [NSMutableDictionary dictionary];
+
+		[self updateLogInUI];
+	}
+	else if( self.sessionID && [inString hasPrefix: @"MEP:"] )	// My position
+	{
+		if( parts.count < 2 ) return;
+		NSString * positionString = parts[1];
+		
+		myPosition = NSPointFromString(positionString);
+		NSLog(@"Server confirmed our position as %f,%f", myPosition.x, myPosition.y);
+	}
+	else if( self.sessionID && [inString hasPrefix: @"POS:"] ) // Some other player's position
+	{
+		if( parts.count < 4 ) return;
+		NSString * ipAddress = parts[1];
+		NSString * portNumberObj = parts[2];
+		NSString * positionString = parts[3];
+		
+		UnDecidedPlayer * playerObj = [UnDecidedPlayer new];
+		playerObj.playerPosition = NSPointFromString(positionString);
+		NSString * theKey = [NSString stringWithFormat: @"%@:%@", ipAddress, portNumberObj];
+		self.playerPositions[ theKey ] = playerObj;
+		NSLog(@"Server updated position of %@ as %f,%f", theKey, myPosition.x, myPosition.y);
+
+		self.mapView.connections = self.playerPositions.allValues;
+	}
+	else if( self.sessionID && [inString isEqualToString: @"BYE"] )
+	{
+		[self updateLogInUI];
+	}
+	else if( [inString hasPrefix: @"ERR:"] )	// Could be an error during login, so might not have a session yet.
+	{
+		if( self.sessionID && (parts.count > 1) && [parts[1] isEqualToString: @"NotLoggedIn"] )	// Server logged us out?
+		{
+			self.sessionID = nil;
+			[self updateLogInUI];
+		}
+		NSRunAlertPanel( @"Error", @"%@", @"OK", @"", @"", inString );
+	}
+}
+
+
+-(void) updateLogInUI
+{
+	self.logInButton.enabled = (self.sessionID == nil);
+	self.userNameField.enabled = (self.sessionID == nil);
+	self.passwordField.enabled = (self.sessionID == nil);
+	self.logOutButton.enabled = (self.sessionID != nil);
+}
+
+
+-(IBAction) logOut: (id)sender
+{
+	if( self.sessionID )
+	{
+		[self sendOneMessage: [NSString stringWithFormat: @"BYE:%@", self.sessionID]];
+		self.sessionID = nil;
+	}
+	[self updateLogInUI];
+}
+
+
+-(NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+{
+	[self logOut: self];
+	return NSTerminateNow;
+}
+
+
+-(void)applicationWillTerminate:(NSNotification *)notification
+{
+	keepReceiving = NO;
+	close(s);
+	s = -1;
+}
+
+
+-(IBAction) logIn: (id)sender
+{
 	if( (s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1 )
 	{
 		perror("socket");
@@ -77,57 +174,9 @@
 	
 	[NSThread detachNewThreadSelector: @selector(udpClientThread) toTarget: self withObject: nil];
 	
-	[self sendOneMessage: @"HEY"];
-}
-
-
--(void) applicationWillFinishLaunching:(NSNotification *)notification
-{
-	[self sendOneMessage: @"BYE"];
-}
-
-
--(void) handleOneMessage: (NSString*)inString
-{
-	NSLog(@"Received: %@", inString);
-	
-	if( [inString hasPrefix: @"MEP:"] )	// My position
-	{
-		NSArray *parts = [inString componentsSeparatedByString: @":"];
-		if( parts.count < 2 ) return;
-		NSString * positionString = parts[1];
-		
-		myPosition = NSPointFromString(positionString);
-		NSLog(@"Server confirmed our position as %f,%f", myPosition.x, myPosition.y);
-	}
-	else if( [inString hasPrefix: @"POS:"] ) // Some other player's position
-	{
-		NSArray *parts = [inString componentsSeparatedByString: @":"];
-		if( parts.count < 4 ) return;
-		NSString * ipAddress = parts[1];
-		NSString * portNumberObj = parts[2];
-		NSString * positionString = parts[3];
-		
-		UnDecidedPlayer * playerObj = [UnDecidedPlayer new];
-		playerObj.playerPosition = NSPointFromString(positionString);
-		NSString * theKey = [NSString stringWithFormat: @"%@:%@", ipAddress, portNumberObj];
-		self.playerPositions[ theKey ] = playerObj;
-		NSLog(@"Server updated position of %@ as %f,%f", theKey, myPosition.x, myPosition.y);
-
-		self.mapView.connections = self.playerPositions.allValues;
-	}
-}
-
-
--(void)applicationWillTerminate:(NSNotification *)notification
-{
-	close(s);
-}
-
-
--(IBAction) sendMessage: (id)sender
-{
-	[self sendOneMessage: self.messageField.stringValue];
+	NSCharacterSet * colonSafeCS = [[NSCharacterSet characterSetWithCharactersInString: @":\r\n"] invertedSet];
+	NSString * loginMessage = [NSString stringWithFormat: @"HEY:%@:%@", [self.userNameField.stringValue stringByAddingPercentEncodingWithAllowedCharacters: colonSafeCS], [self.passwordField.stringValue stringByAddingPercentEncodingWithAllowedCharacters: colonSafeCS]];
+	[self sendOneMessage: loginMessage];
 }
 
 
@@ -147,7 +196,9 @@
 
 -(void) udpClientThread
 {
-	while(true)
+	keepReceiving = YES;
+	
+	while(keepReceiving)
 	{
 		//receive a reply and print it
 		char buf[BUFLEN] = {};
@@ -176,7 +227,7 @@
 	myPosition.x += distance.x;
 	myPosition.y += distance.y;
 	
-	[self sendOneMessage: [NSString stringWithFormat: @"MOV:{%f,%f}", myPosition.x, myPosition.y]];
+	[self sendOneMessage: [NSString stringWithFormat: @"MOV:%@:{%f,%f}", self.sessionID, myPosition.x, myPosition.y]];
 }
 
 @end

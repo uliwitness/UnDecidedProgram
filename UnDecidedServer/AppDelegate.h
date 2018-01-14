@@ -14,8 +14,6 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
-@property (strong) NSMutableArray<UnDecidedServerConnection *> *connections;
-
 -(int) socketFD;
 
 -(void) sendOneMessageToAll: (NSString*)msg;

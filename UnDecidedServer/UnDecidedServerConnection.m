@@ -19,6 +19,7 @@
 }
 
 @property (weak) AppDelegate* owner;
+@property (copy,readwrite) NSString *sessionID;
 
 @end
 
@@ -32,6 +33,7 @@
 	{
 		si_other = inAddress;
 		self.owner = inOwner;
+		self.sessionID = [NSString stringWithFormat: @"%08llx", ((uint64_t)arc4random()) | (((uint64_t)arc4random()) << 32)];
 		lastUsedTime = [NSDate timeIntervalSinceReferenceDate];
 
 		[NSTimer scheduledTimerWithTimeInterval: 1.0 repeats: YES block:^(NSTimer * _Nonnull timer) {
@@ -77,21 +79,32 @@
 {
 	NSLog(@"Received: %@", inMessage);
 	
-	if( [inMessage hasPrefix: @"HEY"] )	// A client just "connected".
+	NSArray<NSString *> *parts = [inMessage componentsSeparatedByString: @":"];
+	
+	// All requests except "HEY" include a session ID as the second part.
+	if( [parts[0] isEqualToString: @"HEY"] )	// A client just "connected".
 	{
+		// Tell the client about the session ID it should use in future requests:
+		[self sendMessageString: [NSString stringWithFormat: @"HEY:%@", self.sessionID]];
+
 		// Tell the client about its current position:
 		[self sendMessageString: [NSString stringWithFormat: @"MEP:{%f,%f}", self.playerPosition.x, self.playerPosition.y]];
 		
 		// Tell the client about every other client's position:
 		[self.owner sendLocationMessagesTo: self];
 	}
-	else if( [inMessage hasPrefix: @"MOV:"] ) // A client would like to move elsewhere.
+	else if( [parts[0] isEqualToString: @"MOV"] ) // A client would like to move elsewhere.
 	{
-		NSPoint desiredPosition = NSPointFromString([inMessage substringFromIndex: 5]);
+		if( parts.count < 3 )
+		{
+			NSLog(@"MOV command by %@ ended early.", self.userName);
+			return;
+		}
+		NSPoint desiredPosition = NSPointFromString(parts[2]);
 		CGFloat xDist = fabs(desiredPosition.x -self.playerPosition.x);
 		CGFloat yDist = fabs(desiredPosition.y -self.playerPosition.y);
 		CGFloat asTheCrowFlies = sqrt(xDist * xDist + yDist * yDist);
-		NSLog(@"Request to move %s:%d by %f", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), asTheCrowFlies);
+		NSLog(@"Request to move %@ (%s:%d) by %f", self.userName, inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), asTheCrowFlies);
 		if( asTheCrowFlies < 20 )
 		{
 			self.playerPosition = desiredPosition;
@@ -99,18 +112,19 @@
 			[self.owner sendOneMessageToAll: [NSString stringWithFormat: @"POS:%s:%d:{%f,%f}", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.playerPosition.x, self.playerPosition.y]];
 		}
 	}
-	else if( [inMessage hasPrefix: @"BYE"] ) // A client is quitting, clean up the "connection" object.
+	else if( [parts[0] isEqualToString: @"BYE"] ) // A client is quitting, clean up the "connection" object.
 	{
+		NSLog(@"Request to log out %@ from %s:%d", self.userName, inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
 		[self.owner performSelectorOnMainThread: @selector(closeConnection:) withObject: self waitUntilDone: NO];
 	}
 	else
 	{
-		NSString * cmd = (inMessage.length > 2) ? [inMessage substringToIndex: 3] : inMessage;
+		NSString * cmd = parts[0];
 		if( [cmd rangeOfCharacterFromSet: [[NSCharacterSet alphanumericCharacterSet] invertedSet]].location != NSNotFound )	// Commands should be alphanumeric, if not, someone's trying to inject something into our reply.
 		{
 			cmd = @"";
 		}
-		[self sendMessageString: [NSString stringWithFormat: @"ERR:Unknown Command '%@'", cmd]];
+		[self sendMessageString: [NSString stringWithFormat: @"ERR:UnknownCommand '%@'", cmd]];
 	}
 
 	lastUsedTime = [NSDate timeIntervalSinceReferenceDate];
@@ -125,7 +139,7 @@
 
 -(NSString*) description
 {
-	return [NSString stringWithFormat: @"<%@ %p>{ ip = %s, port = %d }", self.className, self, inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port)];
+	return [NSString stringWithFormat: @"<%@ %p>{ userName = %@, sessionID = %@, ip = %s, port = %d }", self.className, self, self.userName, self.sessionID, inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port)];
 }
 
 @end

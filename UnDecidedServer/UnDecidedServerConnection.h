@@ -16,6 +16,8 @@
 
 -(instancetype) initWithAddress: (struct sockaddr_in)inAddress owner: (AppDelegate*)owner;
 
+@property (copy,readonly) NSString *sessionID;
+
 -(struct sockaddr_in) socketAddress;
 -(NSTimeInterval) lastUsedTime;
 
