@@ -40,7 +40,9 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	self.connections = [NSMutableArray array];
-	NSString * passwordsFile = [@"~/Library/Application Support/Passwords.plist" stringByExpandingTildeInPath];
+	NSString * passwordsFile = [@"~/Library/Application Support/UnDecidedServer/Passwords.plist" stringByExpandingTildeInPath];
+	NSError *error = nil;
+	[[NSFileManager defaultManager] createDirectoryAtPath: [passwordsFile stringByDeletingLastPathComponent] withIntermediateDirectories: NO attributes: nil error: &error];
 	self.passwordsForUsernames = [NSMutableDictionary dictionaryWithContentsOfFile: passwordsFile];
 	if( self.passwordsForUsernames == nil )
 	{
