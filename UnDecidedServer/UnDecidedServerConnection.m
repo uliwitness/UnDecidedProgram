@@ -108,8 +108,8 @@
 		if( asTheCrowFlies < 20 )
 		{
 			self.playerPosition = desiredPosition;
-			[self sendMessageString: [NSString stringWithFormat: @"MEP:{%f,%f}", self.playerPosition.x, self.playerPosition.y]];
-			[self.owner sendOneMessageToAll: [NSString stringWithFormat: @"POS:%s:%d:{%f,%f}", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.playerPosition.x, self.playerPosition.y]];
+			[self sendMessageString: [NSString stringWithFormat: @"MEP:{%f,%f}:%u:%u", self.playerPosition.x, self.playerPosition.y, self.costumeID, self.animationID]];
+			[self.owner sendOneMessageToAll: [NSString stringWithFormat: @"POS:%s:%d:{%f,%f}:%u:%u", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.playerPosition.x, self.playerPosition.y, self.costumeID, self.animationID]];
 		}
 	}
 	else if( [parts[0] isEqualToString: @"BYE"] ) // A client is quitting, clean up the "connection" object.
@@ -133,13 +133,13 @@
 
 -(void)	sendLocationMessageTo: (UnDecidedServerConnection*)inReceiver
 {
-	[inReceiver sendMessageString: [NSString stringWithFormat: @"POS:%s:%d:{%f,%f}", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.playerPosition.x, self.playerPosition.y]];
+	[inReceiver sendMessageString: [NSString stringWithFormat: @"POS:%s:%d:{%f,%f}:%u:%u", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.playerPosition.x, self.playerPosition.y, self.costumeID, self.animationID]];
 }
 
 
 -(NSString*) description
 {
-	return [NSString stringWithFormat: @"<%@ %p>{ userName = %@, sessionID = %@, ip = %s, port = %d }", self.className, self, self.userName, self.sessionID, inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port)];
+	return [NSString stringWithFormat: @"<%@ %p>{ userName = %@, sessionID = %@, ip = %s, port = %d, costume = %u, animation = %u }", self.className, self, self.userName, self.sessionID, inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.costumeID, self.animationID];
 }
 
 @end

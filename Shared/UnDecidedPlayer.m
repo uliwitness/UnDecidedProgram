@@ -11,4 +11,9 @@
 
 @implementation UnDecidedPlayer
 
+-(NSString*) description
+{
+	return [NSString stringWithFormat: @"<%@ %p>{ userName = %@, costume = %u, animation = %u }", self.className, self, self.userName, self.costumeID, self.animationID];
+}
+
 @end
