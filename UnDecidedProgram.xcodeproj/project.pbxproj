@@ -45,6 +45,7 @@
 		55362E202000562600CCB11E /* UnDecidedMapView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnDecidedMapView.m; sourceTree = "<group>"; };
 		55362E222000671400CCB11E /* UnDecidedPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UnDecidedPlayer.h; path = Shared/UnDecidedPlayer.h; sourceTree = SOURCE_ROOT; };
 		55362E232000671400CCB11E /* UnDecidedPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UnDecidedPlayer.m; path = Shared/UnDecidedPlayer.m; sourceTree = SOURCE_ROOT; };
+		55597FD1200C5FE40045DEDD /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +69,7 @@
 		55362DEA1FFF15C700CCB11E = {
 			isa = PBXGroup;
 			children = (
+				55597FD1200C5FE40045DEDD /* Readme.md */,
 				55362E272000677100CCB11E /* Shared */,
 				55362DF51FFF15C700CCB11E /* UnDecidedServer */,
 				55362E0C1FFF23C200CCB11E /* UnDecidedClient */,
