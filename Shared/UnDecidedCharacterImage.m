@@ -79,7 +79,7 @@ struct UnDecidedSkeletonPoint
 
 @implementation UnDecidedCharacterImage
 
--(instancetype) initWithContentsOfFile: (NSString*)inPath
+-(instancetype) initWithContentsOfDirectory: (NSString*)inPath
 {
 	self = [super init];
 	if( self )
