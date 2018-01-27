@@ -79,6 +79,35 @@ struct UnDecidedSkeletonPoint
 
 @implementation UnDecidedCharacterImage
 
+-(instancetype) initWithContentsOfFile: (NSString*)inPath
+{
+	self = [super init];
+	if( self )
+	{
+		NSArray<NSString *> * files = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath: inPath error: NULL] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+		NSMutableArray<UnDecidedSkeleton *> * poses = [NSMutableArray array];
+		NSMutableArray<NSImage *> * images = [NSMutableArray array];
+
+		for( NSString * currFile in files )
+		{
+			NSString * currPath = [inPath stringByAppendingString: currFile];
+			if( [[currFile pathExtension] caseInsensitiveCompare: @"plist"] == NSOrderedSame )
+			{
+				[poses addObject: [[UnDecidedSkeleton alloc] initWithContentsOfFile: currPath]];
+			}
+			else
+			{
+				[images addObject: [[NSImage alloc] initWithContentsOfFile: currPath]];
+			}
+		}
+		self.poses = poses;
+		self.inputImages = images;
+	}
+	
+	return self;
+}
+
+
 -(void) setSelectedPoseIndex: (NSUInteger)selectedPoseIndex
 {
 	_selectedPoseIndex = selectedPoseIndex;
