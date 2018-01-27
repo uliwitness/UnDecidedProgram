@@ -109,17 +109,20 @@
 			userInfo = [NSDictionary dictionaryWithContentsOfFile: userInfoPath];
 		}
 		
+		NSString * posMessageToSelf;
+
 		@synchronized(self)
 		{
 			self.playerPosition = NSPointFromString(userInfo[@"position"]);
 			self.costumeID = [userInfo[@"costumeID"] integerValue];
+			posMessageToSelf = [NSString stringWithFormat: @"MEP:{%f,%f}:%ld:%ld", self.playerPosition.x, self.playerPosition.y, (long)self.costumeID, (long)self.animationID];
 		}
 		
 		// Tell the client about the session ID it should use in future requests:
 		[self sendMessageString: [NSString stringWithFormat: @"HEY:%@", self.sessionID]];
 
 		// Tell the client about its current position:
-		[self sendMessageString: [NSString stringWithFormat: @"MEP:{%f,%f}:%ld:%ld", self.playerPosition.x, self.playerPosition.y, (long)self.costumeID, (long)self.animationID]];
+		[self sendMessageString: posMessageToSelf];
 		
 		// Tell the client about every other client's position:
 		[self.owner sendLocationMessagesTo: self];
@@ -153,6 +156,20 @@
 			[self sendMessageString: posChangeMessageToSelf];
 			[self.owner sendOneMessageToAll: posChangeMessageToOthers];
 			[userInfo writeToFile:userInfoPath atomically:YES];
+		}
+		else	// Move exceeds possible step size. Remind client of actual position.
+		{
+			NSString * posChangeMessageToSelf;
+			NSString * posChangeMessageToOthers;
+
+			@synchronized(self)
+			{
+				posChangeMessageToSelf = [NSString stringWithFormat: @"MEP:{%f,%f}:%ld:%ld", self.playerPosition.x, self.playerPosition.y, (long)self.costumeID, (long)self.animationID];
+				posChangeMessageToOthers = [NSString stringWithFormat: @"POS:%s:%d:{%f,%f}:%ld:%ld:%@", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.playerPosition.x, self.playerPosition.y, (long)self.costumeID, (long)self.animationID, self.userName];
+			}
+			
+			[self sendMessageString: posChangeMessageToSelf];
+			[self sendMessageString: posChangeMessageToOthers];	// Only re-send the "outside view" message to the client, which is obviously misinformed, don't flood all other clients.
 		}
 	}
 	else if( [parts[0] isEqualToString: @"BYE"] ) // A client is quitting, clean up the "connection" object.
