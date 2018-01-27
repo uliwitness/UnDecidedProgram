@@ -13,7 +13,7 @@
 
 -(NSString*) description
 {
-	return [NSString stringWithFormat: @"<%@ %p>{ userName = %@, costume = %u, animation = %u }", self.className, self, self.userName, self.costumeID, self.animationID];
+	return [NSString stringWithFormat: @"<%@ %p>{ userName = %@, costume = %ld, animation = %ld }", self.className, self, self.userName, (long)self.costumeID, (long)self.animationID];
 }
 
 @end

@@ -80,15 +80,46 @@
 	NSLog(@"Received: %@", inMessage);
 	
 	NSArray<NSString *> *parts = [inMessage componentsSeparatedByString: @":"];
-	
+	NSString * appSupportPath = [@"~/Library/Application Support/UnDecidedServer/Users/" stringByExpandingTildeInPath];
+	NSString * userInfoPath = [appSupportPath stringByAppendingPathComponent: [NSString stringWithFormat: @"%@.plist", self.userName]];
+
 	// All requests except "HEY" include a session ID as the second part.
 	if( [parts[0] isEqualToString: @"HEY"] )	// A client just "connected".
 	{
+		NSError * err = nil;
+		if( ![[NSFileManager defaultManager] fileExistsAtPath: appSupportPath] )
+		{
+			if( ![[NSFileManager defaultManager] createDirectoryAtPath: appSupportPath withIntermediateDirectories: YES attributes: nil error: &err] )
+			{
+				[self sendMessageString: [NSString stringWithFormat: @"ERR:NotLoggedIn:%@", err.localizedFailureReason]];
+				return;
+			}
+		}
+
+		NSDictionary * userInfo = nil;
+		if( ![[NSFileManager defaultManager] fileExistsAtPath: userInfoPath] )
+		{
+			userInfo = @{ @"position": @"{0,0}", @"costumeID": @"1" };
+			if( ![userInfo writeToFile: userInfoPath atomically: YES] )
+			{
+				[self sendMessageString: [NSString stringWithFormat: @"ERR:NotLoggedIn:%@", err.localizedFailureReason]];
+				return;
+			}
+		} else {
+			userInfo = [NSDictionary dictionaryWithContentsOfFile: userInfoPath];
+		}
+		
+		@synchronized(self)
+		{
+			self.playerPosition = NSPointFromString(userInfo[@"position"]);
+			self.costumeID = [userInfo[@"costumeID"] integerValue];
+		}
+		
 		// Tell the client about the session ID it should use in future requests:
 		[self sendMessageString: [NSString stringWithFormat: @"HEY:%@", self.sessionID]];
 
 		// Tell the client about its current position:
-		[self sendMessageString: [NSString stringWithFormat: @"MEP:{%f,%f}", self.playerPosition.x, self.playerPosition.y]];
+		[self sendMessageString: [NSString stringWithFormat: @"MEP:{%f,%f}:%ld:%ld", self.playerPosition.x, self.playerPosition.y, (long)self.costumeID, (long)self.animationID]];
 		
 		// Tell the client about every other client's position:
 		[self.owner sendLocationMessagesTo: self];
@@ -107,9 +138,21 @@
 		NSLog(@"Request to move %@ (%s:%d) by %f", self.userName, inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), asTheCrowFlies);
 		if( asTheCrowFlies < 20 )
 		{
-			self.playerPosition = desiredPosition;
-			[self sendMessageString: [NSString stringWithFormat: @"MEP:{%f,%f}:%u:%u", self.playerPosition.x, self.playerPosition.y, self.costumeID, self.animationID]];
-			[self.owner sendOneMessageToAll: [NSString stringWithFormat: @"POS:%s:%d:{%f,%f}:%u:%u", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.playerPosition.x, self.playerPosition.y, self.costumeID, self.animationID]];
+			NSString * posChangeMessageToSelf;
+			NSString * posChangeMessageToOthers;
+			NSDictionary * userInfo;
+			
+			@synchronized(self)
+			{
+				self.playerPosition = desiredPosition;
+				posChangeMessageToSelf = [NSString stringWithFormat: @"MEP:{%f,%f}:%ld:%ld", self.playerPosition.x, self.playerPosition.y, (long)self.costumeID, (long)self.animationID];
+				posChangeMessageToOthers = [NSString stringWithFormat: @"POS:%s:%d:{%f,%f}:%ld:%ld:%@", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.playerPosition.x, self.playerPosition.y, (long)self.costumeID, (long)self.animationID, self.userName];
+				userInfo = @{ @"position": NSStringFromPoint(self.playerPosition), @"costumeID": @(self.costumeID) };
+			}
+			
+			[self sendMessageString: posChangeMessageToSelf];
+			[self.owner sendOneMessageToAll: posChangeMessageToOthers];
+			[userInfo writeToFile:userInfoPath atomically:YES];
 		}
 	}
 	else if( [parts[0] isEqualToString: @"BYE"] ) // A client is quitting, clean up the "connection" object.
@@ -133,13 +176,14 @@
 
 -(void)	sendLocationMessageTo: (UnDecidedServerConnection*)inReceiver
 {
-	[inReceiver sendMessageString: [NSString stringWithFormat: @"POS:%s:%d:{%f,%f}:%u:%u", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.playerPosition.x, self.playerPosition.y, self.costumeID, self.animationID]];
+	NSString * msgString = [NSString stringWithFormat: @"POS:%s:%d:{%f,%f}:%ld:%ld:%@", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.playerPosition.x, self.playerPosition.y, (long)self.costumeID, (long)self.animationID, self.userName];
+	[inReceiver sendMessageString: msgString];
 }
 
 
 -(NSString*) description
 {
-	return [NSString stringWithFormat: @"<%@ %p>{ userName = %@, sessionID = %@, ip = %s, port = %d, costume = %u, animation = %u }", self.className, self, self.userName, self.sessionID, inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self.costumeID, self.animationID];
+	return [NSString stringWithFormat: @"<%@ %p>{ userName = %@, sessionID = %@, ip = %s, port = %d, costume = %ld, animation = %ld }", self.className, self, self.userName, self.sessionID, inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), (long)self.costumeID, (long)self.animationID];
 }
 
 @end

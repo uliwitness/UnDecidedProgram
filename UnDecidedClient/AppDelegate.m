@@ -28,6 +28,8 @@
 	struct sockaddr_in si_other;
 	int s;
 	NSPoint myPosition;
+	NSUInteger myCostumeID;
+	NSUInteger myAnimationID;
 	BOOL keepReceiving;
 }
 
@@ -58,7 +60,7 @@
 	NSArray *parts = [inString componentsSeparatedByString: @":"];
 	if( [inString hasPrefix: @"HEY:"] )	// Answer to our "HEY"! We're logged in!
 	{
-		if( parts.count < 2 ) return;
+		if( parts.count < 2 ) { NSLog(@"Ignoring. Only %ld components in HEY.", (long)parts.count); return; }
 		self.sessionID = parts[1];
 		self.playerPositions = [NSMutableDictionary dictionary];
 
@@ -66,24 +68,32 @@
 	}
 	else if( self.sessionID && [inString hasPrefix: @"MEP:"] )	// My position
 	{
-		if( parts.count < 2 ) return;
+		if( parts.count < 4 ) { NSLog(@"Ignoring. Only %ld components in MEP.", (long)parts.count); return; }
 		NSString * positionString = parts[1];
-		
+		myCostumeID = [parts[2] integerValue];
+		myAnimationID = [parts[3] integerValue];
+
 		myPosition = NSPointFromString(positionString);
 		NSLog(@"Server confirmed our position as %f,%f", myPosition.x, myPosition.y);
 	}
 	else if( self.sessionID && [inString hasPrefix: @"POS:"] ) // Some other player's position
 	{
-		if( parts.count < 4 ) return;
+		if( parts.count < 7 ) { NSLog(@"Ignoring. Only %ld components in POS.", (long)parts.count); return; }
 		NSString * ipAddress = parts[1];
 		NSString * portNumberObj = parts[2];
 		NSString * positionString = parts[3];
-		
+		NSInteger costumeID = [parts[4] integerValue];
+		NSInteger animationID = [parts[5] integerValue];
+		NSString * userName = parts[6];
+
 		UnDecidedPlayer * playerObj = [UnDecidedPlayer new];
 		playerObj.playerPosition = NSPointFromString(positionString);
+		playerObj.costumeID = costumeID;
+		playerObj.animationID = animationID;
+		playerObj.userName = userName;
 		NSString * theKey = [NSString stringWithFormat: @"%@:%@", ipAddress, portNumberObj];
 		self.playerPositions[ theKey ] = playerObj;
-		NSLog(@"Server updated position of %@ as %f,%f", theKey, myPosition.x, myPosition.y);
+		NSLog(@"Server updated position of %@ as %f,%f", theKey, playerObj.playerPosition.x, playerObj.playerPosition.y);
 
 		self.mapView.connections = self.playerPositions.allValues;
 	}
@@ -117,6 +127,7 @@
 	if( self.sessionID )
 	{
 		[self sendOneMessage: [NSString stringWithFormat: @"BYE:%@", self.sessionID]];
+		[self.mapView setConnections: @[]];
 		self.sessionID = nil;
 	}
 	[self updateLogInUI];

@@ -20,6 +20,7 @@
 
 #define BUFLEN 512  //Max length of buffer
 #define PORT 13762   //The port on which to listen for incoming data
+#define MIN_PASSWORD_LENGTH 6
 
 
 @interface AppDelegate ()
@@ -129,12 +130,17 @@
 		NSArray<NSString *> *messageParts = [message componentsSeparatedByString: @":"];
 		if( [messageParts.firstObject isEqualToString: @"HEY"] )
 		{
-			if( messageParts.count < 3 ) continue;
+			if( messageParts.count < 3 ) { NSLog(@"Ignoring. Only %ld components in HEY.", (long)messageParts.count); continue; }
 			NSString * requestedUserName = messageParts[1].stringByRemovingPercentEncoding;
+			if( [requestedUserName rangeOfString: @"/"].location != NSNotFound || [requestedUserName rangeOfString: @".."].location != NSNotFound )
+			{
+				continue;
+			}
+			
 			NSString * password = messageParts[2].stringByRemovingPercentEncoding;
 			
 			NSString * actualPassword = self.passwordsForUsernames[requestedUserName];
-			if( [actualPassword isEqualToString: password] )
+			if( [actualPassword isEqualToString: password] && [actualPassword length] > MIN_PASSWORD_LENGTH )
 				loggedInUserName = requestedUserName;
 
 			@synchronized(self.connections)
@@ -173,7 +179,7 @@
 		}
 		else
 		{
-			if( messageParts.count < 2 ) continue;
+			if( messageParts.count < 2 ) { NSLog(@"Ignoring. Only %ld components in command.", (long)messageParts.count); continue; }
 			
 			NSString * sessionID = messageParts[1];
 			
@@ -235,6 +241,7 @@
 		@synchronized(self.connections)
 		{
 			[self.connections makeObjectsPerformSelector: @selector(sendLocationMessageTo:) withObject: inReceiver];
+			[self.mapView setConnections: [self.connections copy]];
 		}
 	});
 }
@@ -247,6 +254,7 @@
 		@synchronized(self.connections)
 		{
 			[self.connections removeObject: inReceiver];
+			[self.mapView setConnections: [self.connections copy]];
 		}
 	});
 }

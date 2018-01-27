@@ -13,7 +13,7 @@
 
 @property (copy) NSString *userName;
 @property (assign) NSPoint playerPosition;
-@property (assign) uint32_t costumeID;
-@property (assign) uint32_t animationID;
+@property (assign) NSInteger costumeID;
+@property (assign) NSInteger animationID;
 
 @end

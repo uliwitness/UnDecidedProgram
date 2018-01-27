@@ -31,8 +31,12 @@
     for( UnDecidedPlayer * currPlayer in self.connections)
 	{
 		NSRect	box = { .origin = currPlayer.playerPosition, .size = NSZeroSize };
-		box = NSInsetRect(box, 4, 4);
+		box = NSInsetRect(box, -4, -4);
 		[[NSBezierPath bezierPathWithOvalInRect: box] fill];
+		[currPlayer.userName drawAtPoint:NSMakePoint(NSMaxX(box) +4 , NSMinY(box))
+						  withAttributes: @{
+											NSFontAttributeName: [NSFont systemFontOfSize: [NSFont smallSystemFontSize]]
+											}];
 	}
 }
 
