@@ -28,6 +28,6 @@
 @property(strong, readonly) NSImage * image;
 @property(assign, nonatomic) NSUInteger selectedPoseIndex;
 
--(instancetype) initWithContentsOfDirectory: (NSString*)inPath
+-(instancetype) initWithContentsOfDirectory: (NSString*)inPath;
 
 @end
