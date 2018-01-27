@@ -20,6 +20,7 @@
 		55362E242000671400CCB11E /* UnDecidedPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 55362E232000671400CCB11E /* UnDecidedPlayer.m */; };
 		55362E252000671400CCB11E /* UnDecidedPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 55362E232000671400CCB11E /* UnDecidedPlayer.m */; };
 		55362E282000678100CCB11E /* UnDecidedMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55362E202000562600CCB11E /* UnDecidedMapView.m */; };
+		5563B57A201C3E2C00EDED31 /* UnDecidedCharacterImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,8 @@
 		55362E222000671400CCB11E /* UnDecidedPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UnDecidedPlayer.h; path = Shared/UnDecidedPlayer.h; sourceTree = SOURCE_ROOT; };
 		55362E232000671400CCB11E /* UnDecidedPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UnDecidedPlayer.m; path = Shared/UnDecidedPlayer.m; sourceTree = SOURCE_ROOT; };
 		55597FD1200C5FE40045DEDD /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
+		5563B578201C3E2C00EDED31 /* UnDecidedCharacterImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnDecidedCharacterImage.h; sourceTree = "<group>"; };
+		5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnDecidedCharacterImage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +126,8 @@
 				55362E232000671400CCB11E /* UnDecidedPlayer.m */,
 				55362E1F2000562600CCB11E /* UnDecidedMapView.h */,
 				55362E202000562600CCB11E /* UnDecidedMapView.m */,
+				5563B578201C3E2C00EDED31 /* UnDecidedCharacterImage.h */,
+				5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -229,6 +234,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55362E242000671400CCB11E /* UnDecidedPlayer.m in Sources */,
+				5563B57A201C3E2C00EDED31 /* UnDecidedCharacterImage.m in Sources */,
 				55362E1E20003F2100CCB11E /* UnDecidedServerConnection.m in Sources */,
 				55362E001FFF15C700CCB11E /* main.m in Sources */,
 				55362DF81FFF15C700CCB11E /* AppDelegate.m in Sources */,
