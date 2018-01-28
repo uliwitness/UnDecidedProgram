@@ -142,7 +142,7 @@ struct UnDecidedSkeletonPoint
 	[NSGraphicsContext saveGraphicsState];
 	NSImage * posedImage = [[NSImage alloc] initWithSize: NSMakeSize(128,128)];
 	[posedImage lockFocus];
-		for( NSInteger x = 0; x < skeleton.count; ++x )
+		for( NSUInteger x = 0; x < skeleton.count; ++x )
 		{
 			NSPoint pos = [skeleton pointAtIndex: x];
 			CGFloat rotation = [skeleton rotationAtIndex: x];
@@ -164,6 +164,39 @@ struct UnDecidedSkeletonPoint
 	[NSGraphicsContext restoreGraphicsState];
 
 	self.image = posedImage;
+}
+
+
+-(void) forEachBoneAddOffset: (NSPoint)offs andDo: (void(^)(NSUInteger x,NSPoint tl,NSPoint tr, NSPoint br, NSPoint bl))forEachCallback
+{
+	UnDecidedSkeleton * skeleton = self.poses[_selectedPoseIndex];
+	
+	for( NSUInteger x = 0; x < skeleton.count; ++x )
+	{
+		NSPoint pos = [skeleton pointAtIndex: x];
+		CGFloat rotation = [skeleton rotationAtIndex: x];
+		NSImage * inputImage = self.inputImages[x];
+		NSAffineTransform * rotationTransform = [NSAffineTransform transform];
+		[rotationTransform translateXBy: pos.x yBy: pos.y];
+		[rotationTransform rotateByDegrees: rotation];
+
+		NSRect drawBox = { NSMakePoint(-truncf(inputImage.size.width / 2.0), -truncf(inputImage.size.height / 2.0)), inputImage.size };
+		NSPoint tl = [rotationTransform transformPoint: NSMakePoint(NSMinX(drawBox),NSMaxY(drawBox))];
+		NSPoint tr = [rotationTransform transformPoint: NSMakePoint(NSMaxX(drawBox),NSMaxY(drawBox))];
+		NSPoint br = [rotationTransform transformPoint: NSMakePoint(NSMaxX(drawBox),NSMinY(drawBox))];
+		NSPoint bl = [rotationTransform transformPoint: NSMakePoint(NSMinX(drawBox),NSMinY(drawBox))];
+		
+		tl.x += offs.x;
+		tr.x += offs.x;
+		br.x += offs.x;
+		bl.x += offs.x;
+		tl.y += offs.y;
+		tr.y += offs.y;
+		br.y += offs.y;
+		bl.y += offs.y;
+
+		forEachCallback( x, tl, tr, br, bl );
+	}
 }
 
 @end

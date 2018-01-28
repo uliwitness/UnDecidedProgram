@@ -43,6 +43,18 @@
 		UnDecidedCharacterImage * characterImage = [[UnDecidedCharacterImage alloc] initWithContentsOfDirectory: currPath];
 		characterImage.selectedPoseIndex = 0;
 		[characterImage.image drawAtPoint: box.origin fromRect: NSZeroRect operation: NSCompositingOperationSourceOver fraction: 1.0];
+		
+		[NSColor.greenColor set];
+		[characterImage forEachBoneAddOffset: box.origin andDo: ^(NSUInteger x, NSPoint tl, NSPoint tr, NSPoint br, NSPoint bl) {
+			NSBezierPath * highlightPath = [NSBezierPath bezierPath];
+			[highlightPath moveToPoint: tl];
+			[highlightPath lineToPoint: tr];
+			[highlightPath lineToPoint: br];
+			[highlightPath lineToPoint: bl];
+			[highlightPath lineToPoint: tl];
+			[highlightPath stroke];
+		}];
+		[NSColor.blackColor set];
 	}
 }
 

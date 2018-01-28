@@ -30,4 +30,6 @@
 
 -(instancetype) initWithContentsOfDirectory: (NSString*)inPath;
 
+-(void) forEachBoneAddOffset: (NSPoint)offs andDo: (void(^)(NSUInteger x,NSPoint tl,NSPoint tr, NSPoint br, NSPoint bl))forEachCallback;
+
 @end
