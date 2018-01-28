@@ -50,6 +50,15 @@
 {
 	self.playerPositions = [NSMutableDictionary dictionary];
 	[self updateLogInUI];
+
+	NSError * error = nil;
+	NSString * costumesPath = [[NSString stringWithFormat: @"~/Library/Application Support/%@/Costumes/", [[NSBundle mainBundle].executablePath lastPathComponent]] stringByExpandingTildeInPath];
+	if( ![[NSFileManager defaultManager] fileExistsAtPath: costumesPath] )
+	{
+		[[NSFileManager defaultManager] createDirectoryAtPath: [costumesPath stringByDeletingLastPathComponent] withIntermediateDirectories: YES attributes: nil error: &error];
+		NSString * originalPath = [[NSBundle mainBundle] pathForResource:@"Costumes" ofType:@"" inDirectory:@""];
+		[[NSFileManager defaultManager] copyItemAtPath: originalPath toPath: costumesPath error: &error];
+	}
 }
 
 
@@ -74,7 +83,7 @@
 		myAnimationID = [parts[3] integerValue];
 
 		myPosition = NSPointFromString(positionString);
-		NSLog(@"Server confirmed our position as %f,%f", myPosition.x, myPosition.y);
+		NSLog(@"Server confirmed our position as %f,%f and costume %ld (animation %ld)", myPosition.x, myPosition.y, (long)myCostumeID, (long)myAnimationID);
 	}
 	else if( self.sessionID && [inString hasPrefix: @"POS:"] ) // Some other player's position
 	{
@@ -93,7 +102,7 @@
 		playerObj.userName = userName;
 		NSString * theKey = [NSString stringWithFormat: @"%@:%@", ipAddress, portNumberObj];
 		self.playerPositions[ theKey ] = playerObj;
-		NSLog(@"Server updated position of %@ as %f,%f", theKey, playerObj.playerPosition.x, playerObj.playerPosition.y);
+		NSLog(@"Server updated position of %@ as %f,%f and costume %ld (animation %ld)", theKey, playerObj.playerPosition.x, playerObj.playerPosition.y, (long)costumeID, (long)animationID);
 
 		self.mapView.connections = self.playerPositions.allValues;
 	}

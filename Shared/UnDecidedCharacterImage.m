@@ -40,6 +40,11 @@ struct UnDecidedSkeletonPoint
 	if( self )
 	{
 		NSArray<NSDictionary *> * plistRepresentation = [NSArray arrayWithContentsOfFile: inPath];
+		if( !plistRepresentation )
+		{
+			NSLog(@"Error: Couldn't read %@", inPath);
+			return nil;
+		}
 		NSMutableData * pointsArray = [NSMutableData dataWithLength: plistRepresentation.count * sizeof(struct UnDecidedSkeletonPoint)];
 		
 		struct UnDecidedSkeletonPoint * points = [pointsArray mutableBytes];
@@ -50,7 +55,7 @@ struct UnDecidedSkeletonPoint
 			points[x].rotation = [currPoint[@"rotation"] doubleValue];
 		}
 		
-		self.pointsArray = pointsArray;
+		self->pointsArray = pointsArray;
 	}
 	
 	return self;
@@ -84,20 +89,40 @@ struct UnDecidedSkeletonPoint
 	self = [super init];
 	if( self )
 	{
-		NSArray<NSString *> * files = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath: inPath error: NULL] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+		NSError * error = nil;
+		NSArray<NSString *> * files = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath: inPath error: &error] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+		if( !files )
+		{
+			NSLog(@"Error: %@", error);
+			return nil;
+		}
 		NSMutableArray<UnDecidedSkeleton *> * poses = [NSMutableArray array];
 		NSMutableArray<NSImage *> * images = [NSMutableArray array];
 
 		for( NSString * currFile in files )
 		{
-			NSString * currPath = [inPath stringByAppendingString: currFile];
+			if( [currFile hasPrefix: @"."] )
+				continue;
+			NSString * currPath = [[inPath stringByAppendingString: @"/"] stringByAppendingString: currFile];
 			if( [[currFile pathExtension] caseInsensitiveCompare: @"plist"] == NSOrderedSame )
 			{
-				[poses addObject: [[UnDecidedSkeleton alloc] initWithContentsOfFile: currPath]];
+				UnDecidedSkeleton * skeleton = [[UnDecidedSkeleton alloc] initWithContentsOfFile: currPath];
+				if( !skeleton )
+				{
+					NSLog(@"Error: Couldn't load %@", currPath);
+					return nil;
+				}
+				[poses addObject: skeleton];
 			}
 			else
 			{
-				[images addObject: [[NSImage alloc] initWithContentsOfFile: currPath]];
+				NSImage * img = [[NSImage alloc] initWithContentsOfFile: currPath];
+				if( !img )
+				{
+					NSLog(@"No image from path %@", currPath);
+					continue;
+				}
+				[images addObject: img];
 			}
 		}
 		self.poses = poses;
@@ -114,7 +139,8 @@ struct UnDecidedSkeletonPoint
 	
 	UnDecidedSkeleton * skeleton = self.poses[selectedPoseIndex];
 	
-	NSImage * posedImage = [[NSImage alloc] initWithSize: NSSize(128,128)];
+	[NSGraphicsContext saveGraphicsState];
+	NSImage * posedImage = [[NSImage alloc] initWithSize: NSMakeSize(128,128)];
 	[posedImage lockFocus];
 		for( NSInteger x = 0; x < skeleton.count; ++x )
 		{
@@ -125,14 +151,18 @@ struct UnDecidedSkeletonPoint
 				NSAffineTransform * rotationTransform = [NSAffineTransform transform];
 				[rotationTransform translateXBy: pos.x yBy: pos.y];
 				[rotationTransform rotateByDegrees: rotation];
-				[inputImage drawAtPoint: NSMakePoint(-truncf(inputImage.size.width / 2.0), -truncf(inputImage.size.height / 2.0))
+				[rotationTransform concat];
+				NSPoint drawPos = NSMakePoint(-truncf(inputImage.size.width / 2.0), -truncf(inputImage.size.height / 2.0));
+				[inputImage drawAtPoint: drawPos
 							   fromRect: NSZeroRect
-							  operation: NSCompositingOperationSourceAtop
+							  operation: NSCompositingOperationSourceOver
 							   fraction: 1.0];
 			[NSGraphicsContext restoreGraphicsState];
 		}
+	[[NSColor redColor] setFill];
 	[posedImage unlockFocus];
-	
+	[NSGraphicsContext restoreGraphicsState];
+
 	self.image = posedImage;
 }
 

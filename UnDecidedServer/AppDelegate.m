@@ -16,6 +16,7 @@
 #include<sys/socket.h>
 #import "UnDecidedServerConnection.h"
 #import "UnDecidedMapView.h"
+#import "UnDecidedCharacterImage.h"
 
 
 #define BUFLEN 512  //Max length of buffer
@@ -50,6 +51,9 @@
 		self.passwordsForUsernames = [NSMutableDictionary dictionaryWithObjectsAndKeys: @"Insecure", @"admin", nil];
 		[self.passwordsForUsernames writeToFile: passwordsFile atomically: YES];
 	}
+	
+//	NSString * costumesPath = [[NSString stringWithFormat: @"~/Library/Application Support/%@/Costumes/", [[NSBundle mainBundle].executablePath lastPathComponent]] stringByExpandingTildeInPath];
+//	[[NSFileManager defaultManager] createDirectoryAtPath: costumesPath withIntermediateDirectories: NO attributes: nil error: &error];
 	
 	struct sockaddr_in si_me = {};
 	
@@ -90,14 +94,32 @@
 	
 	keepRunning = YES;
 	[NSThread detachNewThreadSelector: @selector(udpServerMainThread) toTarget: self withObject: nil];
+	
+//	[NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector: @selector(updateCostumeImage:) userInfo: nil repeats: YES];
 }
 
 
-- (void)applicationWillTerminate:(NSNotification *)aNotification
+-(void)	applicationWillTerminate:(NSNotification *)aNotification
 {
 	keepRunning = NO;
 	close(s);
 }
+
+
+//-(void)	updateCostumeImage: (NSTimer*)inTimer
+//{
+//	NSString * costumesPath = [[NSString stringWithFormat: @"~/Library/Application Support/%@/Costumes/", [[NSBundle mainBundle].executablePath lastPathComponent]] stringByExpandingTildeInPath];
+//	NSString * costumeFileName = [costumesPath stringByAppendingPathComponent: [NSString stringWithFormat: @"%ld/", 1L]];
+//	if( ![[NSFileManager defaultManager] fileExistsAtPath: costumeFileName] )
+//	{
+//		[inTimer invalidate];
+//		return;
+//	}
+//	
+//	UnDecidedCharacterImage * characterImage = [[UnDecidedCharacterImage alloc] initWithContentsOfDirectory: costumeFileName];
+//	characterImage.selectedPoseIndex = 0;
+//	self.costumeImage.image = characterImage.image;
+//}
 
 
 -(int) socketFD

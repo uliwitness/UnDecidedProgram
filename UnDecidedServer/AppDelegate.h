@@ -14,6 +14,8 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
+@property(weak) IBOutlet NSImageView * costumeImage;
+
 -(int) socketFD;
 
 -(void) sendOneMessageToAll: (NSString*)msg;

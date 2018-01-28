@@ -20,6 +20,9 @@
 		55362E242000671400CCB11E /* UnDecidedPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 55362E232000671400CCB11E /* UnDecidedPlayer.m */; };
 		55362E252000671400CCB11E /* UnDecidedPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 55362E232000671400CCB11E /* UnDecidedPlayer.m */; };
 		55362E282000678100CCB11E /* UnDecidedMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55362E202000562600CCB11E /* UnDecidedMapView.m */; };
+		5546CBB8201E602600317010 /* UnDecidedCharacterImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */; };
+		5546CBEE201E620400317010 /* Costumes in Resources */ = {isa = PBXBuildFile; fileRef = 5546CBED201E620400317010 /* Costumes */; };
+		5546CBEF201E620C00317010 /* Costumes in Resources */ = {isa = PBXBuildFile; fileRef = 5546CBED201E620400317010 /* Costumes */; };
 		5563B57A201C3E2C00EDED31 /* UnDecidedCharacterImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +49,7 @@
 		55362E202000562600CCB11E /* UnDecidedMapView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnDecidedMapView.m; sourceTree = "<group>"; };
 		55362E222000671400CCB11E /* UnDecidedPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UnDecidedPlayer.h; path = Shared/UnDecidedPlayer.h; sourceTree = SOURCE_ROOT; };
 		55362E232000671400CCB11E /* UnDecidedPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UnDecidedPlayer.m; path = Shared/UnDecidedPlayer.m; sourceTree = SOURCE_ROOT; };
+		5546CBED201E620400317010 /* Costumes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Costumes; path = Shared/Costumes; sourceTree = SOURCE_ROOT; };
 		55597FD1200C5FE40045DEDD /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		5563B578201C3E2C00EDED31 /* UnDecidedCharacterImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnDecidedCharacterImage.h; sourceTree = "<group>"; };
 		5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnDecidedCharacterImage.m; sourceTree = "<group>"; };
@@ -112,6 +116,7 @@
 				55362E0E1FFF23C200CCB11E /* AppDelegate.m */,
 				55362E101FFF23C200CCB11E /* Assets.xcassets */,
 				55362E121FFF23C200CCB11E /* MainMenu.xib */,
+				5546CBED201E620400317010 /* Costumes */,
 				55362E151FFF23C200CCB11E /* Info.plist */,
 				55362E161FFF23C200CCB11E /* main.m */,
 				55362E181FFF23C200CCB11E /* UnDecidedClient.entitlements */,
@@ -213,6 +218,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55362DFA1FFF15C700CCB11E /* Assets.xcassets in Resources */,
+				5546CBEF201E620C00317010 /* Costumes in Resources */,
 				55362DFD1FFF15C700CCB11E /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -222,6 +228,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55362E111FFF23C200CCB11E /* Assets.xcassets in Resources */,
+				5546CBEE201E620400317010 /* Costumes in Resources */,
 				55362E141FFF23C200CCB11E /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -248,6 +255,7 @@
 			files = (
 				55362E171FFF23C200CCB11E /* main.m in Sources */,
 				55362E252000671400CCB11E /* UnDecidedPlayer.m in Sources */,
+				5546CBB8201E602600317010 /* UnDecidedCharacterImage.m in Sources */,
 				55362E0F1FFF23C200CCB11E /* AppDelegate.m in Sources */,
 				55362E282000678100CCB11E /* UnDecidedMapView.m in Sources */,
 			);

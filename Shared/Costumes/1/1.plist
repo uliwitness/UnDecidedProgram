@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>position</key>
+		<string>{63,64}</string>
+		<key>rotation</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>position</key>
+		<string>{63,49}</string>
+		<key>rotation</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>position</key>
+		<string>{66,29}</string>
+		<key>rotation</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>position</key>
+		<string>{64,13}</string>
+		<key>rotation</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>position</key>
+		<string>{64,58}</string>
+		<key>rotation</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>position</key>
+		<string>{64,90}</string>
+		<key>rotation</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>position</key>
+		<string>{57,14}</string>
+		<key>rotation</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>position</key>
+		<string>{60,29}</string>
+		<key>rotation</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>position</key>
+		<string>{68,64}</string>
+		<key>rotation</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>position</key>
+		<string>{68,49}</string>
+		<key>rotation</key>
+		<integer>0</integer>
+	</dict>
+</array>
+</plist>

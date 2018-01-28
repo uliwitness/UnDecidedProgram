@@ -700,7 +700,7 @@
                     <constraint firstItem="vQa-fF-NcU" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" id="gjR-Fh-XVv"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="139" y="427"/>
+            <point key="canvasLocation" x="127" y="535"/>
         </window>
     </objects>
 </document>

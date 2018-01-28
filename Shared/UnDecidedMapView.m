@@ -8,6 +8,7 @@
 
 #import "UnDecidedMapView.h"
 #import "UnDecidedPlayer.h"
+#import "UnDecidedCharacterImage.h"
 
 
 @interface UnDecidedMapView ()
@@ -28,6 +29,7 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
+	NSString * costumesPath = [[NSString stringWithFormat: @"~/Library/Application Support/%@/Costumes/", [[NSBundle mainBundle].executablePath lastPathComponent]] stringByExpandingTildeInPath];
     for( UnDecidedPlayer * currPlayer in self.connections)
 	{
 		NSRect	box = { .origin = currPlayer.playerPosition, .size = NSZeroSize };
@@ -37,6 +39,10 @@
 						  withAttributes: @{
 											NSFontAttributeName: [NSFont systemFontOfSize: [NSFont smallSystemFontSize]]
 											}];
+		NSString * currPath = [costumesPath stringByAppendingPathComponent: [NSString stringWithFormat: @"%ld/", currPlayer.costumeID]];
+		UnDecidedCharacterImage * characterImage = [[UnDecidedCharacterImage alloc] initWithContentsOfDirectory: currPath];
+		characterImage.selectedPoseIndex = 0;
+		[characterImage.image drawAtPoint: box.origin fromRect: NSZeroRect operation: NSCompositingOperationSourceOver fraction: 1.0];
 	}
 }
 
