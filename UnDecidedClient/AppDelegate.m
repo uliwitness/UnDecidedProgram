@@ -38,6 +38,7 @@
 @property (weak) IBOutlet NSTextField *passwordField;
 @property (weak) IBOutlet NSButton *logInButton;
 @property (weak) IBOutlet NSButton *logOutButton;
+@property (weak) IBOutlet NSTextField *chatField;
 @property (weak) IBOutlet UnDecidedMapView* mapView;
 @property (strong) NSMutableDictionary *playerPositions;
 @property (copy) NSString *sessionID;
@@ -59,6 +60,14 @@
 		NSString * originalPath = [[NSBundle mainBundle] pathForResource:@"Costumes" ofType:@"" inDirectory:@""];
 		[[NSFileManager defaultManager] copyItemAtPath: originalPath toPath: costumesPath error: &error];
 	}
+}
+
+
+-(IBAction)	sendChatMessage: (id)sender
+{
+	NSCharacterSet * colonSafeCS = [[NSCharacterSet characterSetWithCharactersInString: @":\r\n"] invertedSet];
+	NSString * msg = [NSString stringWithFormat: @"SAY:%@:%@", self.sessionID, [[sender stringValue] stringByAddingPercentEncodingWithAllowedCharacters: colonSafeCS]];
+	[self sendOneMessage: msg];
 }
 
 
@@ -84,6 +93,15 @@
 
 		myPosition = NSPointFromString(positionString);
 		NSLog(@"Server confirmed our position as %f,%f and costume %ld (animation %ld)", myPosition.x, myPosition.y, (long)myCostumeID, (long)myAnimationID);
+	}
+	else if( self.sessionID && [inString hasPrefix: @"SAY:"] )	// A chat message from some user.
+	{
+		if( parts.count < 4 ) { NSLog(@"Ignoring. Only %ld components in SAY.", (long)parts.count); return; }
+		NSString * userName = parts[1];
+		NSDate * timeStamp = [NSDate dateWithTimeIntervalSinceReferenceDate: [parts[2] doubleValue]];
+		NSString * message = [parts[3] stringByRemovingPercentEncoding];
+		
+		NSLog(@"Chat message from %@ at %@: %@", userName, timeStamp, message);
 	}
 	else if( self.sessionID && [inString hasPrefix: @"POS:"] ) // Some other player's position
 	{
@@ -138,6 +156,7 @@
 		[self sendOneMessage: [NSString stringWithFormat: @"BYE:%@", self.sessionID]];
 		[self.mapView setConnections: @[]];
 		self.sessionID = nil;
+		keepReceiving = NO;
 	}
 	[self updateLogInUI];
 }

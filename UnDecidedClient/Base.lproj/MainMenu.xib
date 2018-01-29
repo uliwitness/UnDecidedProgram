@@ -14,6 +14,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
+                <outlet property="chatField" destination="vDd-Mx-xbM" id="hGD-l2-kU3"/>
                 <outlet property="logInButton" destination="fr3-qO-DI7" id="HvI-ny-0ZX"/>
                 <outlet property="logOutButton" destination="PVk-hF-a47" id="sby-FT-23s"/>
                 <outlet property="mapView" destination="EqX-nE-mmX" id="UFx-Tf-obw"/>
@@ -705,7 +706,7 @@
                         </textFieldCell>
                     </textField>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="EqX-nE-mmX" customClass="UnDecidedMapView">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="301"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <connections>
                             <outlet property="delegate" destination="Voe-Tx-rLC" id="1eD-wj-mOm"/>
                         </connections>
@@ -750,17 +751,32 @@ DQ
                             <action selector="logOut:" target="Voe-Tx-rLC" id="Wek-aR-O83"/>
                         </connections>
                     </button>
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vDd-Mx-xbM">
+                        <rect key="frame" x="20" y="286" width="440" height="22"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="jo4-Oe-W8A">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <action selector="sendChatMessage:" target="Voe-Tx-rLC" id="7uS-dX-gaD"/>
+                        </connections>
+                    </textField>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="EqX-nE-mmX" firstAttribute="top" secondItem="vDd-Mx-xbM" secondAttribute="bottom" constant="16" id="37i-hq-MLv"/>
                     <constraint firstItem="EqX-nE-mmX" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="AKf-Rv-TRe"/>
+                    <constraint firstItem="vDd-Mx-xbM" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="AMa-SK-igq"/>
                     <constraint firstItem="Tz0-1Z-szd" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="GH7-7O-7qv"/>
                     <constraint firstItem="fr3-qO-DI7" firstAttribute="leading" secondItem="aXo-85-jWr" secondAttribute="trailing" constant="8" symbolic="YES" id="HJI-iF-VUv"/>
+                    <constraint firstAttribute="trailing" secondItem="vDd-Mx-xbM" secondAttribute="trailing" constant="20" id="LjO-gA-urB"/>
                     <constraint firstItem="aXo-85-jWr" firstAttribute="leading" secondItem="Tz0-1Z-szd" secondAttribute="trailing" constant="8" symbolic="YES" id="Pjn-VJ-LAQ"/>
-                    <constraint firstItem="EqX-nE-mmX" firstAttribute="top" secondItem="Tz0-1Z-szd" secondAttribute="bottom" constant="17" id="U7Z-pJ-o23"/>
                     <constraint firstItem="aXo-85-jWr" firstAttribute="baseline" secondItem="Tz0-1Z-szd" secondAttribute="baseline" id="VMe-MB-le1"/>
                     <constraint firstAttribute="trailing" secondItem="EqX-nE-mmX" secondAttribute="trailing" id="W4D-sQ-yv7"/>
                     <constraint firstItem="PVk-hF-a47" firstAttribute="baseline" secondItem="fr3-qO-DI7" secondAttribute="baseline" id="XLG-wO-Yjb"/>
+                    <constraint firstItem="vDd-Mx-xbM" firstAttribute="top" secondItem="Tz0-1Z-szd" secondAttribute="bottom" constant="10" id="Y8D-QE-cCk"/>
                     <constraint firstItem="PVk-hF-a47" firstAttribute="leading" secondItem="fr3-qO-DI7" secondAttribute="trailing" constant="12" id="ZgL-Qv-gzC"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="PVk-hF-a47" secondAttribute="trailing" constant="20" symbolic="YES" id="c2n-cu-wz4"/>
                     <constraint firstItem="Tz0-1Z-szd" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="lfE-WL-Wqk"/>
                     <constraint firstItem="fr3-qO-DI7" firstAttribute="baseline" secondItem="Tz0-1Z-szd" secondAttribute="baseline" id="mmw-1p-RIs"/>
                     <constraint firstAttribute="bottom" secondItem="EqX-nE-mmX" secondAttribute="bottom" id="wbm-b9-xUG"/>

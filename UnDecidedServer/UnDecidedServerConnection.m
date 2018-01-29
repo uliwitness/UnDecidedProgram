@@ -172,6 +172,21 @@
 			[self sendMessageString: posChangeMessageToOthers];	// Only re-send the "outside view" message to the client, which is obviously misinformed, don't flood all other clients.
 		}
 	}
+	else if( [parts[0] isEqualToString: @"SAY"] ) // Chat message from a player.
+	{
+		if( parts.count < 3 )
+		{
+			NSLog(@"SAY command by %@ ended early.", self.userName);
+			return;
+		}
+		NSString * messageStr = [parts[2] stringByRemovingPercentEncoding];
+		NSCharacterSet * colonSafeCS = [[NSCharacterSet characterSetWithCharactersInString: @":\r\n"] invertedSet];
+		NSString * reEncodedMessageStr = [messageStr stringByAddingPercentEncodingWithAllowedCharacters: colonSafeCS];	// Encode again to ensure nobody is trying to hack us by not escaping something.
+		NSLog(@"Message by %@: %@", self.userName, reEncodedMessageStr);
+		NSTimeInterval currentTime = [NSDate.date timeIntervalSinceReferenceDate];	// Timestamp so order from server can be the canonic one.
+		
+		[self.owner sendOneMessageToAll: [NSString stringWithFormat: @"SAY:%@:%f:%@", self.userName, currentTime, reEncodedMessageStr]];
+	}
 	else if( [parts[0] isEqualToString: @"BYE"] ) // A client is quitting, clean up the "connection" object.
 	{
 		NSLog(@"Request to log out %@ from %s:%d", self.userName, inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
