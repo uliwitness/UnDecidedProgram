@@ -23,6 +23,10 @@
 		5546CBB8201E602600317010 /* UnDecidedCharacterImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */; };
 		5546CBEE201E620400317010 /* Costumes in Resources */ = {isa = PBXBuildFile; fileRef = 5546CBED201E620400317010 /* Costumes */; };
 		5546CBEF201E620C00317010 /* Costumes in Resources */ = {isa = PBXBuildFile; fileRef = 5546CBED201E620400317010 /* Costumes */; };
+		5546CBF8201EB4F700317010 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5546CBF7201EB4F700317010 /* AppDelegate.m */; };
+		5546CBFA201EB4F700317010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5546CBF9201EB4F700317010 /* Assets.xcassets */; };
+		5546CBFD201EB4F700317010 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5546CBFB201EB4F700317010 /* MainMenu.xib */; };
+		5546CC00201EB4F700317010 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5546CBFF201EB4F700317010 /* main.m */; };
 		5563B57A201C3E2C00EDED31 /* UnDecidedCharacterImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +54,14 @@
 		55362E222000671400CCB11E /* UnDecidedPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UnDecidedPlayer.h; path = Shared/UnDecidedPlayer.h; sourceTree = SOURCE_ROOT; };
 		55362E232000671400CCB11E /* UnDecidedPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UnDecidedPlayer.m; path = Shared/UnDecidedPlayer.m; sourceTree = SOURCE_ROOT; };
 		5546CBED201E620400317010 /* Costumes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Costumes; path = Shared/Costumes; sourceTree = SOURCE_ROOT; };
+		5546CBF4201EB4F700317010 /* UnDecidedEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnDecidedEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5546CBF6201EB4F700317010 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		5546CBF7201EB4F700317010 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		5546CBF9201EB4F700317010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5546CBFC201EB4F700317010 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		5546CBFE201EB4F700317010 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5546CBFF201EB4F700317010 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		5546CC01201EB4F700317010 /* UnDecidedEditor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UnDecidedEditor.entitlements; sourceTree = "<group>"; };
 		55597FD1200C5FE40045DEDD /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		5563B578201C3E2C00EDED31 /* UnDecidedCharacterImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnDecidedCharacterImage.h; sourceTree = "<group>"; };
 		5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnDecidedCharacterImage.m; sourceTree = "<group>"; };
@@ -70,6 +82,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5546CBF1201EB4F700317010 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -80,6 +99,7 @@
 				55362E272000677100CCB11E /* Shared */,
 				55362DF51FFF15C700CCB11E /* UnDecidedServer */,
 				55362E0C1FFF23C200CCB11E /* UnDecidedClient */,
+				5546CBF5201EB4F700317010 /* UnDecidedEditor */,
 				55362DF41FFF15C700CCB11E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -89,6 +109,7 @@
 			children = (
 				55362DF31FFF15C700CCB11E /* UnDecidedServer.app */,
 				55362E0B1FFF23C200CCB11E /* UnDecidedClient.app */,
+				5546CBF4201EB4F700317010 /* UnDecidedEditor.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -137,6 +158,20 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
+		5546CBF5201EB4F700317010 /* UnDecidedEditor */ = {
+			isa = PBXGroup;
+			children = (
+				5546CBF6201EB4F700317010 /* AppDelegate.h */,
+				5546CBF7201EB4F700317010 /* AppDelegate.m */,
+				5546CBF9201EB4F700317010 /* Assets.xcassets */,
+				5546CBFB201EB4F700317010 /* MainMenu.xib */,
+				5546CBFE201EB4F700317010 /* Info.plist */,
+				5546CBFF201EB4F700317010 /* main.m */,
+				5546CC01201EB4F700317010 /* UnDecidedEditor.entitlements */,
+			);
+			path = UnDecidedEditor;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -174,6 +209,23 @@
 			productReference = 55362E0B1FFF23C200CCB11E /* UnDecidedClient.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5546CBF3201EB4F700317010 /* UnDecidedEditor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5546CC02201EB4F700317010 /* Build configuration list for PBXNativeTarget "UnDecidedEditor" */;
+			buildPhases = (
+				5546CBF0201EB4F700317010 /* Sources */,
+				5546CBF1201EB4F700317010 /* Frameworks */,
+				5546CBF2201EB4F700317010 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UnDecidedEditor;
+			productName = UnDecidedEditor;
+			productReference = 5546CBF4201EB4F700317010 /* UnDecidedEditor.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -188,6 +240,10 @@
 						ProvisioningStyle = Automatic;
 					};
 					55362E0A1FFF23C200CCB11E = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					5546CBF3201EB4F700317010 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 					};
@@ -208,6 +264,7 @@
 			targets = (
 				55362DF21FFF15C700CCB11E /* UnDecidedServer */,
 				55362E0A1FFF23C200CCB11E /* UnDecidedClient */,
+				5546CBF3201EB4F700317010 /* UnDecidedEditor */,
 			);
 		};
 /* End PBXProject section */
@@ -230,6 +287,15 @@
 				55362E111FFF23C200CCB11E /* Assets.xcassets in Resources */,
 				5546CBEE201E620400317010 /* Costumes in Resources */,
 				55362E141FFF23C200CCB11E /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5546CBF2201EB4F700317010 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5546CBFA201EB4F700317010 /* Assets.xcassets in Resources */,
+				5546CBFD201EB4F700317010 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +327,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5546CBF0201EB4F700317010 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5546CC00201EB4F700317010 /* main.m in Sources */,
+				5546CBF8201EB4F700317010 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
@@ -276,6 +351,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				55362E131FFF23C200CCB11E /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		5546CBFB201EB4F700317010 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5546CBFC201EB4F700317010 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -446,6 +529,36 @@
 			};
 			name = Release;
 		};
+		5546CC03201EB4F700317010 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = UnDecidedEditor/UnDecidedEditor.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = RCKXACKVZS;
+				INFOPLIST_FILE = UnDecidedEditor/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.thevoidsoftware.UnDecidedEditor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5546CC04201EB4F700317010 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = UnDecidedEditor/UnDecidedEditor.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = RCKXACKVZS;
+				INFOPLIST_FILE = UnDecidedEditor/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.thevoidsoftware.UnDecidedEditor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -472,6 +585,15 @@
 			buildConfigurations = (
 				55362E1A1FFF23C200CCB11E /* Debug */,
 				55362E1B1FFF23C200CCB11E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5546CC02201EB4F700317010 /* Build configuration list for PBXNativeTarget "UnDecidedEditor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5546CC03201EB4F700317010 /* Debug */,
+				5546CC04201EB4F700317010 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
