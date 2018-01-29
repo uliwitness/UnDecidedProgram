@@ -23,10 +23,12 @@
 		5546CBB8201E602600317010 /* UnDecidedCharacterImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */; };
 		5546CBEE201E620400317010 /* Costumes in Resources */ = {isa = PBXBuildFile; fileRef = 5546CBED201E620400317010 /* Costumes */; };
 		5546CBEF201E620C00317010 /* Costumes in Resources */ = {isa = PBXBuildFile; fileRef = 5546CBED201E620400317010 /* Costumes */; };
-		5546CBF8201EB4F700317010 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5546CBF7201EB4F700317010 /* AppDelegate.m */; };
+		5546CBF8201EB4F700317010 /* UnDecidedEditorAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5546CBF7201EB4F700317010 /* UnDecidedEditorAppDelegate.m */; };
 		5546CBFA201EB4F700317010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5546CBF9201EB4F700317010 /* Assets.xcassets */; };
 		5546CBFD201EB4F700317010 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5546CBFB201EB4F700317010 /* MainMenu.xib */; };
 		5546CC00201EB4F700317010 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5546CBFF201EB4F700317010 /* main.m */; };
+		5546CC05201ECA4500317010 /* UnDecidedCharacterImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */; };
+		5546CC08201ECAD300317010 /* UnDecidedCharacterImageEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5546CC07201ECAD300317010 /* UnDecidedCharacterImageEditView.m */; };
 		5563B57A201C3E2C00EDED31 /* UnDecidedCharacterImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */; };
 /* End PBXBuildFile section */
 
@@ -55,13 +57,15 @@
 		55362E232000671400CCB11E /* UnDecidedPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UnDecidedPlayer.m; path = Shared/UnDecidedPlayer.m; sourceTree = SOURCE_ROOT; };
 		5546CBED201E620400317010 /* Costumes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Costumes; path = Shared/Costumes; sourceTree = SOURCE_ROOT; };
 		5546CBF4201EB4F700317010 /* UnDecidedEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnDecidedEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5546CBF6201EB4F700317010 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		5546CBF7201EB4F700317010 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		5546CBF6201EB4F700317010 /* UnDecidedEditorAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnDecidedEditorAppDelegate.h; sourceTree = "<group>"; };
+		5546CBF7201EB4F700317010 /* UnDecidedEditorAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnDecidedEditorAppDelegate.m; sourceTree = "<group>"; };
 		5546CBF9201EB4F700317010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5546CBFC201EB4F700317010 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		5546CBFE201EB4F700317010 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5546CBFF201EB4F700317010 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5546CC01201EB4F700317010 /* UnDecidedEditor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UnDecidedEditor.entitlements; sourceTree = "<group>"; };
+		5546CC06201ECAD300317010 /* UnDecidedCharacterImageEditView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnDecidedCharacterImageEditView.h; sourceTree = "<group>"; };
+		5546CC07201ECAD300317010 /* UnDecidedCharacterImageEditView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnDecidedCharacterImageEditView.m; sourceTree = "<group>"; };
 		55597FD1200C5FE40045DEDD /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		5563B578201C3E2C00EDED31 /* UnDecidedCharacterImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnDecidedCharacterImage.h; sourceTree = "<group>"; };
 		5563B579201C3E2C00EDED31 /* UnDecidedCharacterImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnDecidedCharacterImage.m; sourceTree = "<group>"; };
@@ -161,8 +165,10 @@
 		5546CBF5201EB4F700317010 /* UnDecidedEditor */ = {
 			isa = PBXGroup;
 			children = (
-				5546CBF6201EB4F700317010 /* AppDelegate.h */,
-				5546CBF7201EB4F700317010 /* AppDelegate.m */,
+				5546CBF6201EB4F700317010 /* UnDecidedEditorAppDelegate.h */,
+				5546CBF7201EB4F700317010 /* UnDecidedEditorAppDelegate.m */,
+				5546CC06201ECAD300317010 /* UnDecidedCharacterImageEditView.h */,
+				5546CC07201ECAD300317010 /* UnDecidedCharacterImageEditView.m */,
 				5546CBF9201EB4F700317010 /* Assets.xcassets */,
 				5546CBFB201EB4F700317010 /* MainMenu.xib */,
 				5546CBFE201EB4F700317010 /* Info.plist */,
@@ -332,7 +338,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				5546CC00201EB4F700317010 /* main.m in Sources */,
-				5546CBF8201EB4F700317010 /* AppDelegate.m in Sources */,
+				5546CC05201ECA4500317010 /* UnDecidedCharacterImage.m in Sources */,
+				5546CC08201ECAD300317010 /* UnDecidedCharacterImageEditView.m in Sources */,
+				5546CBF8201EB4F700317010 /* UnDecidedEditorAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

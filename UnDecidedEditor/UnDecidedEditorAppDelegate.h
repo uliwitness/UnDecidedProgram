@@ -1,5 +1,5 @@
 //
-//  AppDelegate.h
+//  UnDecidedEditorAppDelegate.h
 //  UnDecidedEditor
 //
 //  Created by Uli Kusterer on 29.01.18.
@@ -8,8 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface AppDelegate : NSObject <NSApplicationDelegate>
 
+@interface UnDecidedEditorAppDelegate : NSObject <NSApplicationDelegate>
 
 @end
 
