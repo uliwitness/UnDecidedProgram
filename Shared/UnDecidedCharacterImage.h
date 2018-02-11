@@ -19,6 +19,8 @@
 -(CGFloat) rotationAtIndex: (NSUInteger)idx;
 -(void)	setRotation: (CGFloat)inRotation atIndex: (NSUInteger)idx;
 
+-(BOOL)	writeToFile: (NSString*)inFilePath atomically: (BOOL)inAtomically;
+
 @end
 
 
@@ -32,6 +34,8 @@
 @property(readonly, nonatomic) UnDecidedSkeleton * selectedPose;
 
 -(instancetype) initWithContentsOfDirectory: (NSString*)inPath;
+
+-(BOOL) writeToDirectory: (NSString*)inPath;
 
 -(void) forEachBoneAddOffset: (NSPoint)offs andDo: (void(^)(NSUInteger x,NSPoint tl,NSPoint tr, NSPoint br, NSPoint bl))forEachCallback;
 
