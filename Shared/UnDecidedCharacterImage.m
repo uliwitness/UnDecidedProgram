@@ -18,7 +18,7 @@ struct UnDecidedSkeletonPoint
 
 @interface UnDecidedSkeleton ()
 {
-	NSData * pointsArray;
+	NSMutableData * pointsArray;
 }
 @end
 
@@ -70,13 +70,33 @@ struct UnDecidedSkeletonPoint
 
 -(NSPoint) pointAtIndex: (NSUInteger)idx
 {
+	NSAssert( idx < self.count, @"Trying to read beyond end of skeleton array." );
+	
 	return ((struct UnDecidedSkeletonPoint*)[pointsArray bytes])[idx].position;
+}
+
+
+-(void) setPoint: (NSPoint)inPoint atIndex: (NSUInteger)idx
+{
+	NSAssert( idx < self.count, @"Trying to write beyond end of skeleton array." );
+	
+	((struct UnDecidedSkeletonPoint*)[pointsArray mutableBytes])[idx].position = inPoint;
 }
 
 
 -(CGFloat) rotationAtIndex: (NSUInteger)idx
 {
+	NSAssert( idx < self.count, @"Trying to read beyond end of skeleton array." );
+	
 	return ((struct UnDecidedSkeletonPoint*)[pointsArray bytes])[idx].rotation;
+}
+
+
+-(void)	setRotation: (CGFloat)inRotation atIndex: (NSUInteger)idx
+{
+	NSAssert( idx < self.count, @"Trying to write beyond end of skeleton array." );
+	
+	((struct UnDecidedSkeletonPoint*)[pointsArray bytes])[idx].rotation = inRotation;
 }
 
 @end
@@ -136,34 +156,45 @@ struct UnDecidedSkeletonPoint
 -(void) setSelectedPoseIndex: (NSUInteger)selectedPoseIndex
 {
 	_selectedPoseIndex = selectedPoseIndex;
-	
-	UnDecidedSkeleton * skeleton = self.poses[selectedPoseIndex];
+	[self display];
+}
+
+
+-(void) display
+{
+	UnDecidedSkeleton * skeleton = self.poses[_selectedPoseIndex];
 	
 	[NSGraphicsContext saveGraphicsState];
 	NSImage * posedImage = [[NSImage alloc] initWithSize: NSMakeSize(128,128)];
 	[posedImage lockFocus];
-		for( NSUInteger x = 0; x < skeleton.count; ++x )
-		{
-			NSPoint pos = [skeleton pointAtIndex: x];
-			CGFloat rotation = [skeleton rotationAtIndex: x];
-			NSImage * inputImage = self.inputImages[x];
-			[NSGraphicsContext saveGraphicsState];
-				NSAffineTransform * rotationTransform = [NSAffineTransform transform];
-				[rotationTransform translateXBy: pos.x yBy: pos.y];
-				[rotationTransform rotateByDegrees: rotation];
-				[rotationTransform concat];
-				NSPoint drawPos = NSMakePoint(-truncf(inputImage.size.width / 2.0), -truncf(inputImage.size.height / 2.0));
-				[inputImage drawAtPoint: drawPos
-							   fromRect: NSZeroRect
-							  operation: NSCompositingOperationSourceOver
-							   fraction: 1.0];
-			[NSGraphicsContext restoreGraphicsState];
-		}
+	for( NSUInteger x = 0; x < skeleton.count; ++x )
+	{
+		NSPoint pos = [skeleton pointAtIndex: x];
+		CGFloat rotation = [skeleton rotationAtIndex: x];
+		NSImage * inputImage = self.inputImages[x];
+		[NSGraphicsContext saveGraphicsState];
+		NSAffineTransform * rotationTransform = [NSAffineTransform transform];
+		[rotationTransform translateXBy: pos.x yBy: pos.y];
+		[rotationTransform rotateByDegrees: rotation];
+		[rotationTransform concat];
+		NSPoint drawPos = NSMakePoint(-truncf(inputImage.size.width / 2.0), -truncf(inputImage.size.height / 2.0));
+		[inputImage drawAtPoint: drawPos
+					   fromRect: NSZeroRect
+					  operation: NSCompositingOperationSourceOver
+					   fraction: 1.0];
+		[NSGraphicsContext restoreGraphicsState];
+	}
 	[[NSColor redColor] setFill];
 	[posedImage unlockFocus];
 	[NSGraphicsContext restoreGraphicsState];
-
+	
 	self.image = posedImage;
+}
+
+
+-(UnDecidedSkeleton *)	selectedPose
+{
+	return _poses[_selectedPoseIndex];
 }
 
 

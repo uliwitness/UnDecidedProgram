@@ -15,7 +15,9 @@
 
 -(NSUInteger)	count;
 -(NSPoint) pointAtIndex: (NSUInteger)idx;
+-(void) setPoint: (NSPoint)inPoint atIndex: (NSUInteger)idx;
 -(CGFloat) rotationAtIndex: (NSUInteger)idx;
+-(void)	setRotation: (CGFloat)inRotation atIndex: (NSUInteger)idx;
 
 @end
 
@@ -27,9 +29,12 @@
 
 @property(strong, readonly) NSImage * image;
 @property(assign, nonatomic) NSUInteger selectedPoseIndex;
+@property(readonly, nonatomic) UnDecidedSkeleton * selectedPose;
 
 -(instancetype) initWithContentsOfDirectory: (NSString*)inPath;
 
 -(void) forEachBoneAddOffset: (NSPoint)offs andDo: (void(^)(NSUInteger x,NSPoint tl,NSPoint tr, NSPoint br, NSPoint bl))forEachCallback;
+
+-(void) display;
 
 @end
