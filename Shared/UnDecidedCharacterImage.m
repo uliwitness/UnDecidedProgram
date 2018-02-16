@@ -99,6 +99,7 @@ struct UnDecidedSkeletonPoint
 	((struct UnDecidedSkeletonPoint*)[pointsArray bytes])[idx].rotation = inRotation;
 }
 
+
 -(BOOL)	writeToFile: (NSString*)inFilePath atomically: (BOOL)inAtomically
 {
 	NSUInteger numBones = self.count;
@@ -113,6 +114,16 @@ struct UnDecidedSkeletonPoint
 							}];
 	}
 	return [array writeToFile: inFilePath atomically: inAtomically];
+}
+
+
+-(instancetype) copyWithZone: (NSZone *)zone
+{
+	UnDecidedSkeleton * newObject = [UnDecidedSkeleton new];
+
+	newObject->pointsArray = [pointsArray mutableCopy];
+	
+	return newObject;
 }
 
 @end
@@ -171,7 +182,7 @@ struct UnDecidedSkeletonPoint
 
 -(BOOL) writeToDirectory: (NSString*)inPath
 {
-	NSUInteger x = 0;
+	NSUInteger x = 1;
 	for( UnDecidedSkeleton * currPose in _poses )
 	{
 		NSString * skeletonPath = [inPath stringByAppendingFormat: @"/%lu.plist", (unsigned long)x];

@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface UnDecidedSkeleton : NSObject
+@interface UnDecidedSkeleton : NSObject <NSCopying>
 
 -(instancetype) initWithContentsOfFile: (NSString*)inPath;
 
@@ -20,6 +20,8 @@
 -(void)	setRotation: (CGFloat)inRotation atIndex: (NSUInteger)idx;
 
 -(BOOL)	writeToFile: (NSString*)inFilePath atomically: (BOOL)inAtomically;
+
+-(instancetype) copyWithZone:(NSZone *)zone;
 
 @end
 
